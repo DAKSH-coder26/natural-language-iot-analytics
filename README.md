@@ -16,7 +16,7 @@ This project bridges that gap by providing a governed, natural-language interfac
 
 ## Architecture Preview
 
-![System Architecture](architecture.png)
+![System Architecture](assets/architecture.png)
 
 *The end-to-end pipeline enriches user questions with introspected schema DDL and vector-retrieved few-shot context, validates generated SQL for execution safety, runs queries against PostgreSQL, and concurrently generates interactive Plotly visualizations and diagnostic insights streamed progressively to the client via Server-Sent Events (SSE).*
 
@@ -141,8 +141,8 @@ A dual-axis chart displaying a horizontal bar chart of fault frequencies alongsi
 For a comprehensive technical examination of the implementation, design decisions, and system performance:
 
 - **[In-Depth Engineering Case Study (CASE_STUDY.md)](CASE_STUDY.md)**: Complete analysis covering the 24 industrial domain constraints, 19 Plotly graphing rules, semantic cache mechanics, pattern query overrides, and connection pool architecture.
-- **[System Architecture Diagram (architecture.png)](architecture.png)**: High-resolution visual representation detailing system zones, data flows, and parallel execution branches.
-- **[Mermaid Architecture Specification (architecture.mmd)](architecture.mmd)**: Raw Mermaid diagram source definition.
+- **[System Architecture Diagram (architecture.png)](assets/architecture.png)**: High-resolution visual representation detailing system zones, data flows, and parallel execution branches.
+- **[Mermaid Architecture Specification (architecture.mmd)](assets/architecture.mmd)**: Raw Mermaid diagram source definition.
 
 ---
 
