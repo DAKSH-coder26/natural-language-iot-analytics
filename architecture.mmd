@@ -1,0 +1,84 @@
+flowchart LR
+
+  subgraph ZONE1["1. Frontend Client"]
+    direction TB
+    UserInput["User Interface<br/>Natural-Language Question<br/>Browser Timezone & Context"]
+    DisplayUI["Progressive Display View<br/>SQL Query · Tabular Grid<br/>Interactive Visual · Analysis"]
+  end
+
+  subgraph ZONE2["2. API Gateway and Transport"]
+    direction TB
+    StartupHook["Lifespan Startup Handler<br/>Catalog Schema Introspection<br/>Pipeline Graph Compilation"]
+    APIRoute["Query API Endpoint<br/>Request Validation<br/>Workflow State Dispatch"]
+    SSEStream["SSE Event Streamer<br/>Progressive Event Delivery<br/>SQL · Data · Visual · Analysis"]
+  end
+
+  subgraph ZONE3["3. LangGraph Workflow"]
+    direction TB
+    GenSQL["Generate SQL Node<br/>Schema Context & Domain Rules<br/>Few-Shot Example Ingestion<br/>Pattern Query CTE Handling"]
+    ValidateSQL["Validate SQL Node<br/>Read-Only Query Verification<br/>Prohibited Operation Filtering<br/>Automated Query Bounding"]
+    SafeDecision{"Query<br/>Safe?"}
+    ExecSQL["Execute SQL Node<br/>Managed Connection Execution<br/>Tabular Data Extraction<br/>Statistical Metric Profiling"]
+    StatusDecision{"Result<br/>Status?"}
+    ErrorExit["Error Terminal Node<br/>Structured Failure Feedback"]
+    NoDataExit["No Data Terminal Node<br/>Empty Result Advisory"]
+  end
+
+  subgraph ZONE4["4. Concurrent Output Generation"]
+    direction TB
+    GenChart["Branch A: Chart Generation<br/>Plotly Visualization Code<br/>Visualization Guardrails<br/>Sandboxed Execution Scope"]
+    GenAnalysis["Branch B: Analysis Generation<br/>Domain Analytical Summary<br/>Statistical Anomaly Detection<br/>Actionable Recommendations"]
+  end
+
+  subgraph ZONE5["5. Data and Model Services"]
+    direction TB
+    VectorStore[("Vector Store<br/>Question-SQL Reference Corpus<br/>Domain Glossary Definitions")]
+    CacheDecision{"Semantic<br/>Match?"}
+    LLMService["LLM Inference Service<br/>Text-to-SQL Generation<br/>Chart Code Synthesis<br/>Analytical Interpretation"]
+    TelemetryDB[("PostgreSQL Database<br/>Time-Series Telemetry Records<br/>Asset & Site Hierarchies")]
+    SchemaCatalog[("Database Catalog<br/>Public Table Definitions<br/>Relational Column Types")]
+  end
+
+  %% Primary Workflow Connections
+  UserInput -->|"HTTP Request"| APIRoute
+  APIRoute -->|"Initiate Workflow"| GenSQL
+
+  %% Context Retrieval & Caching
+  GenSQL -->|"Similarity Query"| VectorStore
+  VectorStore -->|"Retrieved Context"| CacheDecision
+  CacheDecision -->|"Cache Hit: Reuse SQL"| ValidateSQL
+  CacheDecision -->|"Cache Miss: Context Prompt"| LLMService
+  LLMService -->|"Generated Query"| GenSQL
+
+  %% Validation Flow
+  GenSQL -->|"Candidate SQL"| ValidateSQL
+  ValidateSQL --> SafeDecision
+  SafeDecision -->|"Safe: Validated Read-Only"| ExecSQL
+  SafeDecision -->|"Unsafe: Prohibited Statement"| ErrorExit
+
+  %% Execution Flow
+  ExecSQL -->|"Execute Query"| TelemetryDB
+  TelemetryDB -->|"Query Record Set"| ExecSQL
+  ExecSQL --> StatusDecision
+  StatusDecision -->|"Records Returned"| GenChart
+  StatusDecision -->|"Records Returned"| GenAnalysis
+  StatusDecision -->|"Execution Error"| ErrorExit
+  StatusDecision -->|"Zero Records"| NoDataExit
+
+  %% Concurrent Generation to LLM
+  GenChart -->|"Chart Prompt"| LLMService
+  GenAnalysis -->|"Analysis Prompt"| LLMService
+
+  %% Progressive Streaming Connections
+  GenSQL -.->|"event: sql"| SSEStream
+  ExecSQL -.->|"event: data"| SSEStream
+  GenChart -.->|"event: chart"| SSEStream
+  GenAnalysis -.->|"event: analysis"| SSEStream
+  ErrorExit -.->|"event: error"| SSEStream
+  NoDataExit -.->|"event: analysis"| SSEStream
+
+  SSEStream -->|"Progressive Event Stream"| DisplayUI
+
+  %% Startup Metadata Flow
+  SchemaCatalog -.->|"Startup Introspection"| StartupHook
+  StartupHook -.->|"Pre-compiled Pipeline"| APIRoute
